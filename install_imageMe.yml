@@ -1,0 +1,31 @@
+- hosts: git_nodes
+  become: yes
+  vars:
+   destination: ~/ec2-user
+  tasks:
+    - name: "install git"
+      yum:
+        name: git
+        state: latest
+    - name: "install python"
+      yum:
+        name: python
+        state: latest
+    - name: "clone repo with python code"
+      git:
+        repo: 'https://github.com/jkanclerz/google-search-python.git'
+        dest: "{{destination}}"
+        clone: no
+        update: yes
+    - name: "clone repo with scripts"
+      git:
+        repo: 'https://github.com/jkanclerz/install-image-me.git'
+        dest: "{{destination}}"
+        clone: no
+        update: yes
+    - name: "change local variable"
+      blockinfile:
+        path: /home/ec2-user/.bashrc
+        block: |
+          export SEARCH_ENGINE_ID=006879359584856769921:rplfy3clmho
+          export GOOGLE_CLOUD_API_KEY=AIzaSyDLLC1pqOxkWA8jUjM-Cfwbl_13Sh_2t98
